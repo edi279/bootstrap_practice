@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<!--https://developer.mozilla.org/ko/docs/Learn/JavaScript/First_steps/A_first_splash 참조-->
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <title>Number Guessing Game</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body{
+                background-color:rgb(224, 243, 241);
+            }
+            header h1{
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .content{
+                padding: 10px;
+            }
+            .form{
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="wrapper">
+            <header>
+                <h1>숫자 맞추기 게임</h1>
+            </header>
+            <div class="content">
+                <p>1에서 100까지의 수 중 무작위로 하나가 주어졌다. 10번 안에 어떤 숫자인지 맞춰보라. 제출한 숫자가 틀릴 경우 그 이상인지 이하인지 범위를 알려줄 것이다.</p>
+            </div>
+        </div>
+        <div class="form">
+            <label for="g_field">숫자를 맞춰보시오: </label>
+            <input type="text" id="g_field" class="g_field">
+            <input type="submit" value="확인" class="g_submit">
+        </div>
+        <div class="resultParas">
+            <p class="guess"></p>
+            <p class="lastResult"></p>
+            <p class="range"></p>
+        </div>
+        <script>
+            var random_num = Math.floor(Math.random()*100)+1;
+            
+            var guess = document.querySelector('.guess');
+            var lastResult = document.querySelector('.lastResult');
+            var range = document.querySelector('.range');
+
+            var g_submit = document.querySelector('.g_submit');
+            var g_field = document.querySelector('.g_field');
+
+            var count = 1;
+            var reset;
+
+            function checkGuess(){
+                var user_ans = Number(g_field.value);
+                if (count===1){
+                    guess.textContent = '이전 제출값: ';
+                }
+                guess.textContent += user_ans + ' ';
+
+                if (user_ans===random_num){
+                    lastResult.textContent = '오호! 정답!';
+                    lastResult.style.backgroundColor = 'skyblue';
+                    range.textContent = ' ';
+                    setGameOver();
+                } else if (count===10){
+                    lastResult.textContent = '~~GAME OVER~~';
+                    setGameOver();
+                } else {
+                    lastResult.textContent = '오답입니다ㅠ';
+                    lastResult.style.backgroundColor = 'yellow';
+                    if (user_ans>random_num){
+                        range.textContent = '좀 더 작은 수 입니다';
+                    } else if (user_ans<random_num){
+                        range.textContent = '좀 더 큰 수 입니다';
+                    }
+                }
+                count++;
+                g_field.value = '';
+                g_field.focus();
+            } g_submit.addEventListener('click', checkGuess);
+
+            function setGameOver(){
+                g_field.disable = true;
+                g_submit.disable = true;
+                resetBotton = document.createElement('botton');
+                resetBotton.textContent = '게임 시작하기';
+                document.body.appendChild(resetButton);
+                resetBotton.addEventListener('click', resetGame);
+            }
+            function resetGame(){
+                count = 1;
+                var resetParas = document.querySelectorAll('.resultParas p');
+                for (var i=0;i<resetParas.length;i++){
+                    resetParas[i].textContent = '';
+                }
+                resetBotton.parenNode.removeChild(resetBotton);
+
+                g_field.disable = false;
+                g_submit.disable = false;
+                g_field.value = '';
+                g_field.focus();
+
+                lastResult.style.backgroundColor = 'white';
+
+                random_num = Math.floor(Math.random() * 100) + 1;
+            }
+        </script>
+    </body>
+</html>
